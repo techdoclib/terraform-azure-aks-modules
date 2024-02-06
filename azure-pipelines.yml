@@ -18,7 +18,7 @@ stages:
           - task: PublishPipelineArtifact@1
             displayName: Publish Artifacts
             inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/terraform-azure-aks-modules'
+              targetPath: '$(System.DefaultWorkingDirectory)'
               artifact: 'terraform-source-code'
               publishLocation: 'pipeline'
           - task: TerraformInstaller@2
@@ -29,7 +29,7 @@ stages:
             displayName: Terraform init
             inputs:
               command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-azure-aks-modules'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
               backendType: 'azurerm'
               backendServiceArm: 'tf-aks-devops-svc-con'
               backendAzureRmResourceGroupName: 'terraform-storage-rg'
@@ -40,6 +40,6 @@ stages:
           - task: TerraformCLI@2
             inputs:
               command: 'validate'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-azure-aks-modules'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
               allowTelemetryCollection: false
   
