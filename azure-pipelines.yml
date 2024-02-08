@@ -9,6 +9,12 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+- name: DEV_ENV
+  value: dev
+- name: QA_ENV
+  value: qa
+
 stages:
   - stage: TerraformValidate
     jobs:
@@ -42,4 +48,46 @@ stages:
               command: 'validate'
               workingDirectory: '$(System.DefaultWorkingDirectory)'
               allowTelemetryCollection: false
-  
+  - stage: DevAKSCluster
+    jobs:
+      - deployment: DeployDevAKSCluster
+        displayName: DeployDevAKSCluster
+        pool:
+         vmImage: 'ubuntu-latest'
+        environment: $(DEV_ENV)
+        strategy:
+         runOnce:
+           deploy:
+             steps:
+             - task: DownloadSecureFile@1
+               displayName: Download SSH Key - DEV
+               name: sshkey
+               inputs:
+                 secureFile: 'id_rsa.pub'
+             - task: TerraformCLI@2
+               displayName: Terraform Init - DEV
+               inputs:
+                 command: 'init'
+                 workingDirectory: '$(Pipeline.Workspace)/terraform-source-code'
+                 backendType: 'azurerm'
+                 backendServiceArm: 'tf-aks-devops-svc-con'
+                 backendAzureRmResourceGroupName: 'tf-state'
+                 backendAzureRmStorageAccountName: 'terraformstateinfolines2'
+                 backendAzureRmContainerName: 'tfstatefiles'
+                 backendAzureRmKey: 'aks-$(DEV_ENV).tfstate'
+                 allowTelemetryCollection: false
+             - task: TerraformCLI@2
+               displayName: Terraform Plan - DEV
+               inputs:
+                 command: 'plan'
+                 workingDirectory: '$(Pipeline.Workspace)/terraform-source-code'
+                 environmentServiceName: 'tf-aks-devops-svc-con'
+                 commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENV) -out $(Pipeline.Workspace)/terraform-source-code/$(DEV_ENV)-$(Build.BuildId).out'
+                 allowTelemetryCollection: false
+             - task: TerraformCLI@2
+               displayName: Terraform Apply - DEV
+               inputs:
+                 command: 'apply'
+                 workingDirectory: '$(Pipeline.Workspace)/terraform-source-code'
+                 environmentServiceName: 'tf-aks-devops-svc-con'
+                 allowTelemetryCollection: false
