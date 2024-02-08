@@ -82,7 +82,7 @@ stages:
                  command: 'plan'
                  workingDirectory: '$(Pipeline.Workspace)/terraform-source-code'
                  environmentServiceName: 'tf-aks-devops-svc-con'
-                 commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENV) -out $(Pipeline.Workspace)/terraform-source-code/$(DEV_ENV)-$(Build.BuildId).out'
+                 commandOptions: '-var environment=$(DEV_ENV) -out $(Pipeline.Workspace)/terraform-source-code/$(DEV_ENV)-$(Build.BuildId).out'
                  allowTelemetryCollection: false
              - task: TerraformCLI@2
                displayName: Terraform Apply - DEV
