@@ -31,18 +31,7 @@ stages:
             displayName: Terraform Install
             inputs:
               terraformVersion: 'latest'
-          - task: TerraformCLI@2
-            displayName: Terraform init
-            inputs:
-              command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)'
-              backendType: 'azurerm'
-              backendServiceArm: 'tf-aks-devops-svc-con'
-              backendAzureRmResourceGroupName: 'tf-state'
-              backendAzureRmStorageAccountName: 'terraformstateinfolines2'
-              backendAzureRmContainerName: 'tfstatefiles'
-              backendAzureRmKey: 'aks-base.tfstate'
-              allowTelemetryCollection: false
+         
           - task: TerraformCLI@2
             displayName: Terraform Destroy
             inputs:
