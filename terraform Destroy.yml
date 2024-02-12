@@ -42,7 +42,7 @@ stages:
               backendAzureRmResourceGroupName: 'tf-state'
               backendAzureRmStorageAccountName: 'terraformstateinfolines2'
               backendAzureRmContainerName: 'tfstatefiles'
-              backendAzureRmKey: 'aks-base.tfstate'
+              backendAzureRmKey: 'aks-base.tfstate-2'
               allowTelemetryCollection: false
           - task: TerraformCLI@2
             displayName: Terraform Destroy
