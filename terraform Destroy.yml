@@ -37,5 +37,5 @@ stages:
             inputs:
               command: 'destroy'
               environmentServiceName: 'tf-aks-devops-svc-con'
-              commandOptions: '-auto-approve'
+              commandOptions: '-auto-approve -migrate-state'
               allowTelemetryCollection: true
